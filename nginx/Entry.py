@@ -64,6 +64,10 @@ def install_nginx(nginx_version_name):
     os.system('make install')
 
 
+def regst_ningx_service():
+    """将Nginx注册为服务的模式，开机自启动"""
+
+
 if __name__ == "__main__":
 
     versions = find_nginx_versions()

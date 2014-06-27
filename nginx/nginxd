@@ -1,0 +1,73 @@
+#!/bin/bash
+#chkconfig: - 85 15
+#description:nginx is a World Wide Web server. It is used to serve
+
+#processname:nginx
+#config /usr/local/nginx/conf/nginx.conf
+#pidfile /usr/local/nginx/logs/nginx.pid
+PATH=/usr/local/nginx/sbin/nginx
+export PATH 
+
+#Source function library
+. /etc/init.d/functions
+
+#Source networking configuration
+. /etc/sysconfig/network 
+
+nginx="/usr/local/nginx/sbin/nginx"
+prog=$(basename $nginx)
+NGINX_CONFIG_FILE="/usr/local/nginx/conf/nginx.conf"
+pid=`cat /usr/local/nginx/logs/nginx.pid`
+
+check_config(){
+		$nginx -t -c $NGINX_CONFIG_FILE
+}
+
+start(){
+	echo 'starting nginx server.'
+		$nginx -c $NGINX_CONFIG_FILE
+		echo 'nginx server start success.'
+}
+
+stop(){
+#kill -QUIT $pid
+	echo 'nginx server will stop'
+		pkill -9 nginx
+		echo 'nginx server stoped'
+}
+
+restart(){
+	echo 'nginx server will  restarting.'
+		stop
+		start
+		echo 'nginx server restart successed.'
+
+}
+
+reload(){
+	echo 'nginx server will reload conf file.'
+		check_config
+		kill -HUP $pid
+		echo 'nginx server reload config successed.'
+}
+#main entry
+case "$1" in
+		start)
+			check_config
+			start
+			;;
+		stop)
+			stop
+			;;
+		restart)
+			restart
+			;;
+		reload)
+			reload
+			;;
+		*)
+			echo "Useage start|stop|restart|reload"
+			;;
+esac
+
+
