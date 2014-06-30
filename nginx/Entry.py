@@ -4,12 +4,16 @@ __author__ = 'george'
 import os
 import urllib2
 import re
+import shutil
 
 NGINX_SITE_URL = "http://www.nginx.org"
 VERSION_PATTERN = '<a href="en/download.html">(.*)</a>'
 DEFAULT_DOWNLOAD_DIR = os.getcwd()
 DEFAULT_VERSION = "nginx-1.6.0"
 DEFAULT_COMPRESS_FORMAT = ".tar.gz"
+DEFAULT_INSTALL_DIR = '/usr/local/nginx'
+CURRENT_DIR = os.getcwd()
+nginx_init = '/etc/init.d/nginx'
 
 
 def find_nginx_versions():
@@ -66,27 +70,57 @@ def install_nginx(nginx_version_name):
 
 def regst_ningx_service():
     """将Nginx注册为服务的模式，开机自启动"""
+    if check_permission():
+        os.chdir(CURRENT_DIR)
+        shutil.copyfile('nginx', '/etc/init.d/nginx')
+        os.system('chkconfig --add nginx')
+        os.system('chkconfig  nginx on --level 35')
+        os.chmod(nginx_init, 700)
+        os.system(nginx_init + ' start')
+
+
+def uninstall_nginx():
+    """卸载已经安装的NGINX服务"""
+
+    if os.path.isfile(nginx_init):
+        # check nginx is runging? stop it
+        os.system(nginx_init + ' stop')
+
+        # delete /etc/init.d/nginx
+        os.remove(nginx_init)
+
+    if os.path.isdir(DEFAULT_DOWNLOAD_DIR):
+        # delete /usr/local/nginx dirctory
+        shutil.rmtree(DEFAULT_INSTALL_DIR)
+
+    print 'clean completed!'
 
 
 if __name__ == "__main__":
 
-    versions = find_nginx_versions()
-    print "【版本列表】"
-    for version in versions:
-        print version
+    command = raw_input("请输入操作指令,I:安装  UI:卸载 默认为[I]")
+    if command == "UI":
+        uninstall_nginx()
+    elif command == "I":
 
-    select_version = raw_input('默认为【nginx-1.6.0】:')
-    if select_version.strip() == "":
-        select_version = DEFAULT_VERSION
-    select_version = check_version(select_version, versions)
+        versions = find_nginx_versions()
+        print "【版本列表】"
+        for version in versions:
+            print version
 
-    download_dir = raw_input("请输入下载目录【默认为当前目录】")
-    if download_dir.strip() == "":
-        download_dir = DEFAULT_DOWNLOAD_DIR
-    if download_dir != DEFAULT_DOWNLOAD_DIR:
-        os.chdir(download_dir)
-    download_nginx(select_version)
-    install_nginx(select_version)
+        select_version = raw_input('默认为【nginx-1.6.0】:')
+        if select_version.strip() == "":
+            select_version = DEFAULT_VERSION
+        select_version = check_version(select_version, versions)
 
-    print download_dir
-    print select_version
+        download_dir = raw_input("请输入下载目录【默认为当前目录】")
+        if download_dir.strip() == "":
+            download_dir = DEFAULT_DOWNLOAD_DIR
+        if download_dir != DEFAULT_DOWNLOAD_DIR:
+            os.chdir(download_dir)
+        download_nginx(select_version)
+        install_nginx(select_version)
+        regst_ningx_service()
+    else:
+        print 'exit'
+
