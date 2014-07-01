@@ -76,7 +76,7 @@ def regst_ningx_service():
         os.system('chkconfig --add nginx')
         os.system('chkconfig  nginx on --level 35')
         os.chmod(nginx_init, 700)
-        os.system(nginx_init + ' start')
+       # os.system(nginx_init + ' start')
 
 
 def uninstall_nginx():
