@@ -76,7 +76,7 @@ def regst_ningx_service():
         os.system('chkconfig --add nginx')
         os.system('chkconfig  nginx on --level 35')
         os.chmod(nginx_init, 700)
-       # os.system(nginx_init + ' start')
+        # os.system(nginx_init + ' start')
 
 
 def uninstall_nginx():
@@ -121,8 +121,8 @@ if __name__ == "__main__":
         download_nginx(select_version)
         install_nginx(select_version)
         regst_ningx_service()
-		print "Nginx安装目录:",DEFAULT_INSTALL_DIR
-		print "Nginx启动路径:",nginx_init
-    else:
-        print 'exit'
+        print "Nginx安装目录:", DEFAULT_INSTALL_DIR
+        print "Nginx启动路径:", nginx_init
+else:
+    print 'exit'
 
