@@ -108,23 +108,47 @@ def nginx_upgrade():
 	current_version='nginx-'+result.split(':')[1].split('/')[1]
 	print '当前版本:%s'%current_version
 
+	#backup current version 
+	backup_dir=raw_input("输入备份目录，默认["+CURRENT_DIR+"]")
+	if backup_dir.strip()=="":
+		backup_dir=CURRENT_DIR
+	backup_cmd='tar -zcvf '+backup_dir+"/"+current_version+DEFAULT_COMPRESS_FORMAT+' '+DEFAULT_INSTALL_DIR
+	os.system(backup_cmd)
+
 	#print version list
 	version_list=find_nginx_versions()
 	print "可选版本:"
 	for version in version_list:
-		if version !=current_version:
+		if version != current_version:
 			print version
-	new_version=raw_input("请输入新的版本号:")
+	while True:
+		new_version=raw_input("请输入新的版本号:")
+		#check version 
+		print 'new version:%s current version:%s'%(new_version,current_version)
+		if new_version not in version_list:
+			print "输入的版本格式不正确,nginx-1.x.x"
+			continue
+		if new_version<current_version :
+			print "选择的版本小于当前版本,不能进行升级"
+			continue
+		break
+
 	download_nginx(new_version)
 	extract_command='tar -zxvf '+new_version+DEFAULT_COMPRESS_FORMAT
 	os.system(extract_command)
 	os.chdir(new_version)
-
+	configure_command = "./configure --user=nginx --group=nginx --prefix=/usr/local/nginx --with-http_mp4_module --with-http_flv_module --with-http_ssl_module --with-http_stub_status_module --with-http_gzip_static_module"
+	os.system(configure_command)
+	os.system('make')
+	os.system('make install')
+	os.system('make upgrade')
+	#view nginx version 
+	print commands.getoutput(cmd)
 
 
 if __name__ == "__main__":
 
-	command = raw_input("请输入操作指令,I:安装  UI:卸载 默认为[I]")
+	command = raw_input("请输入操作指令,I:安装  UI:卸载 U:升级 默认为[I]")
 	if command == "UI":
 		uninstall_nginx()
 	elif command == "I":
@@ -139,7 +163,7 @@ if __name__ == "__main__":
 			select_version = DEFAULT_VERSION
 		select_version = check_version(select_version, versions)
 
-		download_dir = raw_input("请输入下载目录【默认为当前目录】")
+		download_dir = raw_input("请输入下载目录,默认["+CURRENT_DIR+"]")
 		if download_dir.strip() == "":
 			download_dir = DEFAULT_DOWNLOAD_DIR
 		if download_dir != DEFAULT_DOWNLOAD_DIR:
@@ -150,7 +174,7 @@ if __name__ == "__main__":
 		print "Nginx安装目录:", DEFAULT_INSTALL_DIR
 		print "Nginx启动路径:", nginx_init
 	elif command =="U":
-		pass
+		nginx_upgrade()
 	else:
 		print 'exit'
 
