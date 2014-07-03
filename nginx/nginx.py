@@ -23,6 +23,9 @@ nginx_init='/etc/init.d/nginx'
 class Nginx():
 	"""Nginx类负责对Nginx软件的安装、卸载、升级"""
 	def __init__(self):
+		if not self.__check_permission():
+			print "请切换至root用户进行操作"
+			sys.exit()
 		self.verions=[]
 		self.configure_command='./configure --user=nginx --group=nginx --prefix=/usr/local/nginx --with-http_mp4_module --with-http_flv_module --with-http_ssl_module --with-http_stub_status_module --with-http_gzip_static_module'
 		pass
@@ -81,7 +84,7 @@ class Nginx():
 				print "选择的版本小于当前的版本，不能进行升级"
 				contains
 			break
-		__download(new_version)
+		self.__download(new_version)
 		extract_command='tar -zxvf '+new_version+default_compress_format
 		os.system(extract_command)
 		os.chdir(new_version)
@@ -97,11 +100,11 @@ class Nginx():
 		install_command="yum -y install "+compnents
 		os.system(install_command)
 
-	def __check_permission():
+	def self.__check_permission(self):
 		"""当前用户是否是root用户"""
 		return os.getuid()==0
 
-	def __download(version=default_version):
+	def self.__download(version=default_version):
 		"""内部方法，根据指定的版本下载nginx压缩包，并返回下载后的路径"""
 		download_dir=""
 		while True:
