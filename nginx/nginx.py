@@ -49,7 +49,7 @@ class Nginx():
 		os.system('make')
 		os.system('make install')
 		self.__rgst_sytem_service()
-		
+
 	def __get_system_version(self):
 		"""获取操作系统版本，主要识别为el6和el7，返回对应的版本字符串"""
 		#check system version 
@@ -109,12 +109,12 @@ class Nginx():
 			if os.path.exists(system_service_dir+'nginx.service'):
 				os.system('systemctl stop nginx')
 				os.system('systemctl disable nginx')
-				os.remove(system_service_dir+'nginx.servce')
+				os.remove(system_service_dir+'nginx.service')
 
 			if os.path.isdir(default_install_dir):
 				shutil.rmtree(default_install_dir)
 
-	def upgrade(self, new_version):
+	def upgrade(self):
 		"""根据当前版本升级到新版本"""
 		if not os.path.exists(default_install_dir + '/sbin/nginx'):
 			print 'Nginx未安装，请重新选择操作'
@@ -188,11 +188,39 @@ class Nginx():
 			print '当前网络存在问题，请稍候重试'
 			sys.exit()
 
+def useage():
+	"""用法"""
+	print """
+		install:install nginx from internet
+		uninstall:uninstall local nginx 
+		upgrade:upgrade nginx version from low to high
+		versions:print nginx version list
+	"""
+
 
 if __name__ == '__main__':
-	nginx = Nginx()
-	version_list = nginx.get_version_list()
-	for version in version_list:
-		print version
-	nginx.install()
-
+	if len(sys.argv)<2:
+		print useage()
+		sys.exit()
+	command= sys.argv[1]
+	command_list=['versions','install','uninstall','upgrade']
+	if command not in command_list:
+		print useage()
+		sys.exit()
+	nginx=Nginx()
+	if command == 'install':
+		print "可安装的版本:"
+		versions=nginx.get_version_list()
+		for version in versions:
+			print version
+		nginx.install()
+	elif command == 'uninstall':
+		nginx.uninstall()
+	elif command == 'upgrade':
+		nginx.upgrade()
+	elif command=='versions':
+		for version in nginx.get_version_list():
+			print version
+	else:
+		useage()
+		sys.exit()
