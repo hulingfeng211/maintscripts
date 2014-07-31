@@ -1,0 +1,54 @@
+#!/usr/bin/env python
+# -*- coding:utf8 -*- 
+""" 
++FileName:mongodb.py
++Author: george
++mail:hulingfeng211@163.com
++Created Time:2014年07月31日 星期四 13时47分25秒
+Description: """
+import os
+import sys
+
+mongo_home="/usr/local/mongodb"
+mongod_bin=mongo_home+"/bin/mongod "
+pid_file="/tmp/mongodb.pid"
+default_config_argvs="--rest --fork --syslog --httpinterface --pidfilepath  " + pid_file
+default_dbpath="/data/db"
+
+def useage():
+	"""用法"""
+	comment="""
+		start: start the mongod process 
+		stop: stop mongod db server 
+	"""
+	print(comment)
+
+
+if __name__== "__main__":
+	#check power
+	if os.getuid() != 0:
+		print("请切换至root进行操作")
+		sys.exit(0)
+
+	if len(sys.argv) < 2:	
+		useage()
+		sys.exit(0)
+	_,operation,*args=sys.argv
+	if operation == "start":
+		#start mongod
+		if len(args)==0:
+			#check db path exit
+			if not os.path.isdir(default_dbpath):
+				os.system('mkdir -p '+default_dbpath)
+			os.system(mongod_bin +default_config_argvs)
+		else:#使用外部参数进行启动
+			print("开发中...")
+			pass
+	elif operation=="stop":
+		os.system(mongod_bin+"--shutdown")
+		pass 
+	else:
+		useage()
+		sys.exit(0)
+
+
