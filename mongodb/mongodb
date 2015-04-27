@@ -8,47 +8,48 @@
 Description: """
 import os
 import sys
+import argparse
 
-mongo_home="/usr/local/mongodb"
-mongod_bin=mongo_home+"/bin/mongod "
-pid_file="/tmp/mongodb.pid"
-default_config_argvs="--rest --fork --syslog --httpinterface --pidfilepath  " + pid_file
-default_dbpath="/data/db"
+mongo_home = "/usr/local/mongodb"
+mongod_bin = mongo_home + "/bin/mongod "
+pid_file = "/tmp/mongodb.pid"
+default_config_argvs = "--rest --fork --syslog --httpinterface --pidfilepath  " + pid_file
+default_dbpath = "/data/db"
+
 
 def useage():
-	"""用法"""
-	comment="""
+    """用法"""
+    comment = """
 		start: start the mongod process 
 		stop: stop mongod db server 
 	"""
-	print(comment)
+    print(comment)
 
 
-if __name__== "__main__":
-	#check power
-	if os.getuid() != 0:
-		print("请切换至root进行操作")
-		sys.exit(0)
-
-	if len(sys.argv) < 2:	
-		useage()
-		sys.exit(0)
-	_,operation,*args=sys.argv
-	if operation == "start":
-		#start mongod
-		if len(args)==0:
-			#check db path exit
-			if not os.path.isdir(default_dbpath):
-				os.system('mkdir -p '+default_dbpath)
-			os.system(mongod_bin +default_config_argvs)
-		else:#使用外部参数进行启动
-			print("开发中...")
-			pass
-	elif operation=="stop":
-		os.system(mongod_bin+"--shutdown")
-		pass 
-	else:
-		useage()
-		sys.exit(0)
+if __name__ == "__main__":
+    parse = argparse.ArgumentParser()
+    parse.add_argument('--cmd', default='start',
+                       help='start:start mongodb server stop:stop mongodb server ')  # check power
+    if os.getuid() != 0:
+        print("请切换至root进行操作")
+        sys.exit(0)
+    args = parse.parse_args()
+    operation = args.cmd
+    if operation == "start":
+        # start mongod
+        if len(args) == 0:
+            #check db path exit
+            if not os.path.isdir(default_dbpath):
+                os.system('mkdir -p ' + default_dbpath)
+            os.system(mongod_bin + default_config_argvs)
+        else:  #使用外部参数进行启动
+            print("开发中...")
+            pass
+    elif operation == "stop":
+        os.system(mongod_bin + "--shutdown")
+        pass
+    else:
+        useage()
+        sys.exit(0)
 
 
