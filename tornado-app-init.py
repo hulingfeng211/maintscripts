@@ -4,6 +4,38 @@
 #	Create Time:2016-06-21 15:42:11
 #	Description: tornado project initialize script
 #   dir list:
+#├── common
+#│   ├── __init__.py
+#│   └── __init__.pyc
+#├── config.py
+#├── config.pyc
+#├── handler
+#│   ├── __init__.py
+#│   └── __init__.pyc
+#├── manager.py
+#├── README.md
+#├── routes.py
+#├── routes.pyc
+#├── static
+#│   ├── css
+#│   │   └── readme.md
+#│   ├── img
+#│   │   └── readme.md
+#│   ├── js
+#│   │   ├── bundle.js
+#│   │   ├── components
+#│   │   ├── index.jsx
+#│   │   ├── js
+#│   │   ├── node_modules
+#│   │   ├── package.json
+#│   │   ├── readme.md
+#│   │   └── webpack.config.js
+#│   └── lib
+#│       └── readme.md
+#└── templates
+#    ├── index.html
+#    └── readme.md
+
 #      -app
 #       -common 公共模块目录
 #       -handler handler目录
@@ -105,10 +137,10 @@ INDEX_CONTENT = """<!DOCTYPE html>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Bootstrap 101 Template</title>
+    <title>Home</title>
 
     <!-- Bootstrap -->
-    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -118,21 +150,89 @@ INDEX_CONTENT = """<!DOCTYPE html>
     <![endif]-->
   </head>
   <body>
-    <h1>Hello, world!</h1>
+    <div id="container" class="container"></div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>-->
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="../static/js/bootstrap.min.js"></script>
+    <!-- <script src="/static/js/bootstrap.min.js"></script>-->
+    <script src="/static/js/bundle.js"></script>
   </body>
 </html>
+"""
+PACKAGE_CONTENT="""{
+  "name": "react-app",
+  "version": "1.0.0",
+  "description": "react-app",
+  "main": "index.js",
+  "author": "escapedcat",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^15.1.0",
+    "react-bootstrap": "^0.29.4",
+    "react-dom": "^15.1.0",
+    "react-router": "^2.4.1",
+    "react-router-bootstrap": "^0.23.0",
+    "tcomb-form": "^0.9.7"
+  },
+  "devDependencies": {
+    "babel-core": "^5.8.24",
+    "babel-loader": "^5.3.2",     
+    "webpack": "^1.12.1"
+  }
+}
+"""
+WEBPACK_CONTENT="""module.exports = {
+    entry: './index.jsx',
+    output: {
+        filename: 'bundle.js' //this is the default name, so you can skip it
+    
+    },
+    module: {
+        loaders: [
+            
+            {
+                test: /\.jsx$/, exclude: /node_modules/, loader: "babel-loader"
+            }
+        ]
+    },
+    externals: {
+        //don't bundle the 'react' npm package with our bundle.js
+        //but get it from a global 'React' variable
+        //'react': 'React'
+    },
+    resolve: {
+        extensions: ['', '.js', '.jsx']
+    }
+}
+"""
+INDEX_JSX_CONTENT="""import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './components/App';
+
+ReactDOM.render((<App />),document.getElementById('container'));
+
+"""
+
+APP_CONTENT="""import React from 'react';
+import ReactDOM from 'react-dom';
+
+class App extends React.Component {
+	render(){
+		return (<h1>Hello,React App </h1>);
+	}
+}
+export default App
 """
 
 PORJECT_DIR_STRUCTURE=[{'name':'common','children':[{'name':'__init__.py','content':COMMON_CONTENT}]},
 	{'name':'handler','children':[{'name':'__init__.py','content':HANDLER_CONTENT}]},
 	{'name':'manager.py','content':MANAGER_CONTENT},
 	{'name':'templates','children':[{'name':'readme.md'},{'name':'index.html','nohead':True,'content':INDEX_CONTENT}]},
-	{'name':'static','children':[{'name':'js','children':[{'name':'readme.md'}]},
+	{'name':'static','children':[{'name':'js','children':[{'name':'package.json','content':PACKAGE_CONTENT,'nohead':True},
+	{'name':'webpack.config.js','content':WEBPACK_CONTENT,'nohead':True},
+	{'name':'readme.md'},{'name':'index.jsx','content':INDEX_JSX_CONTENT,'nohead':True},
+	{'name':'components','children':[{'name':'App.jsx','content':APP_CONTENT,'nohead':True}]}]},
 	{'name':'img','children':[{'name':'readme.md'}]},
 	{'name':'css','children':[{'name':'readme.md'}]},
 	{'name':'lib','children':[{'name':'readme.md'}]}]},
