@@ -1,51 +1,46 @@
 # -*- coding:utf-8 -*- 
-#=====================================
+"""#=====================================================
 #	Creater:15921315347@163.com
 #	Create Time:2016-06-21 15:42:11
 #	Description: tornado project initialize script
 #   dir list:
-#├── common
-#│   ├── __init__.py
-#│   └── __init__.pyc
-#├── config.py
-#├── config.pyc
-#├── handler
-#│   ├── __init__.py
-#│   └── __init__.pyc
-#├── manager.py
-#├── README.md
-#├── routes.py
-#├── routes.pyc
-#├── static
-#│   ├── css
-#│   │   └── readme.md
-#│   ├── img
-#│   │   └── readme.md
-#│   ├── js
-#│   │   ├── bundle.js
-#│   │   ├── components
-#│   │   ├── index.jsx
-#│   │   ├── js
-#│   │   ├── node_modules
-#│   │   ├── package.json
-#│   │   ├── readme.md
-#│   │   └── webpack.config.js
-#│   └── lib
-#│       └── readme.md
-#└── templates
-#    ├── index.html
-#    └── readme.md
+├── common #公共模块目录
+│   ├── __init__.py
+├── config.py #站点配置
+├── handler #handler目录
+│   ├── __init__.py
+├── manager.py #应用站点入口
+├── README.md
+├── routes.py 站点路由
+├── static
+│   ├── css
+│   │   └── readme.md
+│   ├── img
+│   │   └── readme.md
+│   ├── js
+│   │   ├── bundle.js
+│   │   ├── components
+│   │   ├── index.jsx
+│   │   └── readme.md
+│   ├── lib
+│   │   └── readme.md
+│   ├── node_modules
+│   │   ├── babel-core
+│   │   ├── babel-loader
+│   │   ├── react
+│   │   ├── react-bootstrap
+│   │   ├── react-dom
+│   │   ├── react-router
+│   │   ├── react-router-bootstrap
+│   │   ├── tcomb-form
+│   │   └── webpack
+│   ├── package.json
+│   └── webpack.config.js
+└── templates
+    ├── index.html
+    └── readme.md
 
-#      -app
-#       -common 公共模块目录
-#       -handler handler目录
-#       -manager.py 应用站点入口 
-#       -templates 网页模版文件文件目录 
-#       -static  静态资源文件目录
-#       -routes.py 站点路由
-#       -config.py 站点配置
-#       -README.md
-#=====================================
+#====================================================================="""
 import datetime 
 import os 
 import sys
@@ -56,6 +51,7 @@ FILE_HEADER_TPL = """# -*- coding:utf-8 -*-
 #	Creater:%s
 #	Create Time:%s
 #	Description: 
+#         something here.
 #=====================================
 """
 USEAGE="""initialize tornado web app
@@ -140,22 +136,23 @@ INDEX_CONTENT = """<!DOCTYPE html>
     <title>Home</title>
 
     <!-- Bootstrap -->
-    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/bootstrap/3.3.6/css/bootstrap-theme.min.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
   <body>
     <div id="container" class="container"></div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>-->
+    <script src="http://cdnjs.gtimg.com/cdnjs/libs/jquery/1.9.1/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <!-- <script src="/static/js/bootstrap.min.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="/static/js/bundle.js"></script>
   </body>
 </html>
@@ -183,8 +180,9 @@ PACKAGE_CONTENT="""{
 }
 """
 WEBPACK_CONTENT="""module.exports = {
-    entry: './index.jsx',
+    entry: './js/index.jsx',
     output: {
+        path:'./js',
         filename: 'bundle.js' //this is the default name, so you can skip it
     
     },
@@ -229,10 +227,12 @@ PORJECT_DIR_STRUCTURE=[{'name':'common','children':[{'name':'__init__.py','conte
 	{'name':'handler','children':[{'name':'__init__.py','content':HANDLER_CONTENT}]},
 	{'name':'manager.py','content':MANAGER_CONTENT},
 	{'name':'templates','children':[{'name':'readme.md'},{'name':'index.html','nohead':True,'content':INDEX_CONTENT}]},
-	{'name':'static','children':[{'name':'js','children':[{'name':'package.json','content':PACKAGE_CONTENT,'nohead':True},
-	{'name':'webpack.config.js','content':WEBPACK_CONTENT,'nohead':True},
-	{'name':'readme.md'},{'name':'index.jsx','content':INDEX_JSX_CONTENT,'nohead':True},
-	{'name':'components','children':[{'name':'App.jsx','content':APP_CONTENT,'nohead':True}]}]},
+	{'name':'static','children':[ {'name':'webpack.config.js','content':WEBPACK_CONTENT,'nohead':True},
+  {'name':'package.json','content':PACKAGE_CONTENT,'nohead':True},
+  
+  {'name':'js','children':[	{'name':'components','children':[{'name':'App.jsx','content':APP_CONTENT,'nohead':True}]},
+  {'name':'index.jsx','content':INDEX_JSX_CONTENT,'nohead':True},
+	{'name':'readme.md'}]},
 	{'name':'img','children':[{'name':'readme.md'}]},
 	{'name':'css','children':[{'name':'readme.md'}]},
 	{'name':'lib','children':[{'name':'readme.md'}]}]},
