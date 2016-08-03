@@ -3,7 +3,7 @@
 #	Creater:15921315347@163.com
 #	Create Time:2016-06-21 15:42:11
 #	Description: tornado project initialize script
-#   dir list:
+#   dir list(tree -L 3):
 ├── common #公共模块目录
 │   ├── __init__.py
 ├── config.py #站点配置
