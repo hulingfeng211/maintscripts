@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # -*- coding:utf8 -*- 
-""" 
-+FileName:selfsigncert.py
-+Author: george
-+mail:hulingfeng211@163.com
-+Created Time:2014年11月03日 星期一 14时23分10秒
-Description: """
+"""#=====================================================
+#	FileName:selfsigncert.py
+#	Author: george
+#	mail:hulingfeng211@163.com
+#	Created Time:2014年11月03日 星期一 14时23分10秒
+#	Description: 
+#====================================================="""
 import os
 import sys
 import argparse

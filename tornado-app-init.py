@@ -41,8 +41,8 @@
     └── readme.md
 
 #====================================================================="""
-import datetime 
-import os 
+import datetime
+import os
 import sys
 import argparse
 
@@ -54,15 +54,15 @@ FILE_HEADER_TPL = """# -*- coding:utf-8 -*-
 #         something here.
 #=====================================
 """
-USEAGE="""initialize tornado web app
+USEAGE = """initialize tornado web app
 """
 parser = argparse.ArgumentParser(description=USEAGE)
-parser.add_argument('--app', help="the app name default tornado-app",default='tornado-app')
-parser.add_argument('--author', help='the app author',default='15921315347@163.com')
-parser.add_argument('--port', default=11108,type=int, help='the app listen port,default 11108')
+parser.add_argument('--app', help="the app name default tornado-app", default='tornado-app')
+parser.add_argument('--author', help='the app author', default='15921315347@163.com')
+parser.add_argument('--port', default=11108, type=int, help='the app listen port,default 11108')
 args = parser.parse_args()
 
-MANAGER_CONTENT= """import routes
+MANAGER_CONTENT = """import routes
 from common import settings 
 from tornado.web import Application
 from tornado.gen import IOLoop
@@ -83,7 +83,7 @@ if __name__ == '__main__':
 	gen_log.info('server listening at '+str(options.port))
 	app.listen(options.port)
 	IOLoop.current().start()
-"""%(args.port,)
+""" % (args.port,)
 ROUTE_CONTENT = """import handler
 from tornado.web import url,StaticFileHandler
 
@@ -93,7 +93,7 @@ routes = [
 	url(r"/page/(.*)", StaticFileHandler, {"path": "templates","default_filename":"index.html"})
 ]
 """
-CONFIG_CONTENT= """import os 
+CONFIG_CONTENT = """import os
 DEBUG = True
 
 TEMPLATE_PATH = os.path.join(os.path.dirname(__file__),'templates')
@@ -157,7 +157,7 @@ INDEX_CONTENT = """<!DOCTYPE html>
   </body>
 </html>
 """
-PACKAGE_CONTENT="""{
+PACKAGE_CONTENT = """{
   "name": "react-app",
   "version": "1.0.0",
   "description": "react-app",
@@ -179,7 +179,7 @@ PACKAGE_CONTENT="""{
   }
 }
 """
-WEBPACK_CONTENT="""module.exports = {
+WEBPACK_CONTENT = """module.exports = {
     entry: './js/index.jsx',
     output: {
         path:'./js',
@@ -204,7 +204,7 @@ WEBPACK_CONTENT="""module.exports = {
     }
 }
 """
-INDEX_JSX_CONTENT="""import React from 'react';
+INDEX_JSX_CONTENT = """import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/App';
 
@@ -212,7 +212,7 @@ ReactDOM.render((<App />),document.getElementById('container'));
 
 """
 
-APP_CONTENT="""import React from 'react';
+APP_CONTENT = """import React from 'react';
 import ReactDOM from 'react-dom';
 
 class App extends React.Component {
@@ -223,45 +223,51 @@ class App extends React.Component {
 export default App
 """
 
-PORJECT_DIR_STRUCTURE=[{'name':'common','children':[{'name':'__init__.py','content':COMMON_CONTENT}]},
-	{'name':'handler','children':[{'name':'__init__.py','content':HANDLER_CONTENT}]},
-	{'name':'manager.py','content':MANAGER_CONTENT},
-	{'name':'templates','children':[{'name':'readme.md'},{'name':'index.html','nohead':True,'content':INDEX_CONTENT}]},
-	{'name':'static','children':[ {'name':'webpack.config.js','content':WEBPACK_CONTENT,'nohead':True},
-  {'name':'package.json','content':PACKAGE_CONTENT,'nohead':True},
-  
-  {'name':'js','children':[	{'name':'components','children':[{'name':'App.jsx','content':APP_CONTENT,'nohead':True}]},
-  {'name':'index.jsx','content':INDEX_JSX_CONTENT,'nohead':True},
-	{'name':'readme.md'}]},
-	{'name':'img','children':[{'name':'readme.md'}]},
-	{'name':'css','children':[{'name':'readme.md'}]},
-	{'name':'lib','children':[{'name':'readme.md'}]}]},
-	{'name':'routes.py','content':ROUTE_CONTENT},
-	{'name':'config.py','content':CONFIG_CONTENT},
-	{'name':'README.md'}]
+PORJECT_DIR_STRUCTURE = [{'name': 'common', 'children': [{'name': '__init__.py', 'content': COMMON_CONTENT}]},
+                         {'name': 'handler', 'children': [{'name': '__init__.py', 'content': HANDLER_CONTENT}]},
+                         {'name': 'manager.py', 'content': MANAGER_CONTENT},
+                         {'name': 'templates', 'children': [{'name': 'readme.md'},
+                                                            {'name': 'index.html', 'nohead': True,
+                                                             'content': INDEX_CONTENT}]},
+                         {'name': 'static',
+                          'children': [{'name': 'webpack.config.js', 'content': WEBPACK_CONTENT, 'nohead': True},
+                                       {'name': 'package.json', 'content': PACKAGE_CONTENT, 'nohead': True},
 
-def loop_create_dir(dir_or_file,dirname):
-	"""create file or dir"""
-	if dir_or_file.get('children',None):
-		new_dir = dirname+'/'+dir_or_file.get('name')
-		os.mkdir(new_dir)
-		for child in dir_or_file.get('children'):
-			loop_create_dir(child,new_dir)
-	else:
-		#os.mkdirs(dirname)
-		with open(dirname+'/'+dir_or_file.get('name'),'a+') as f :
-			if not dir_or_file.get('nohead',None):
-				f.write(FILE_HEADER_TPL%(args.author,datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
-			f.write(dir_or_file.get('content',''))
+                                       {'name': 'js', 'children': [{'name': 'components', 'children': [
+                                           {'name': 'App.jsx', 'content': APP_CONTENT, 'nohead': True}]},
+                                                                   {'name': 'index.jsx', 'content': INDEX_JSX_CONTENT,
+                                                                    'nohead': True},
+                                                                   {'name': 'readme.md'}]},
+                                       {'name': 'img', 'children': [{'name': 'readme.md'}]},
+                                       {'name': 'css', 'children': [{'name': 'readme.md'}]},
+                                       {'name': 'lib', 'children': [{'name': 'readme.md'}]}]},
+                         {'name': 'routes.py', 'content': ROUTE_CONTENT},
+                         {'name': 'config.py', 'content': CONFIG_CONTENT},
+                         {'name': 'README.md'}]
+
+
+def loop_create_dir(dir_or_file, dirname):
+    """create file or dir"""
+    if dir_or_file.get('children', None):
+        new_dir = dirname + '/' + dir_or_file.get('name')
+        os.mkdir(new_dir)
+        for child in dir_or_file.get('children'):
+            loop_create_dir(child, new_dir)
+    else:
+        # os.mkdirs(dirname)
+        with open(dirname + '/' + dir_or_file.get('name'), 'a+') as f:
+            if not dir_or_file.get('nohead', None):
+                f.write(FILE_HEADER_TPL % (args.author, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+            f.write(dir_or_file.get('content', ''))
 
 
 if __name__ == '__main__':
-	
-	if os.path.exists(args.app):
-		print '%s is exists. change name and re-try.'%(args.app)
-		sys.exit(-1)
 
-	os.mkdir(args.app)
-	for item  in PORJECT_DIR_STRUCTURE:
-		loop_create_dir(item,args.app)
-	#print FILE_HEADER
+    if os.path.exists(args.app):
+        print '%s is exists. change name and re-try.' % (args.app)
+        sys.exit(-1)
+
+    os.mkdir(args.app)
+    for item in PORJECT_DIR_STRUCTURE:
+        loop_create_dir(item, args.app)
+        # print FILE_HEADER
